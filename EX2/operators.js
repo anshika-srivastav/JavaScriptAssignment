@@ -1,0 +1,23 @@
+// Task 1: arithmetic, assignment, comparison, logical and ternary operators
+let a = 17, b = 5;
+console.log("a + b =", a + b);
+console.log("a - b =", a - b);
+console.log("a * b =", a * b);
+console.log("a / b =", a / b);
+console.log("a % b =", a % b);
+console.log("a ** 2 =", a ** 2);
+let x = 10;
+x += 5; console.log("x += 5 ->", x);
+x -= 3; console.log("x -= 3 ->", x);
+x *= 2; console.log("x *= 2 ->", x);
+x++; console.log("x++ ->", x);
+console.log("5 == '5' :", 5 == "5");
+console.log("5 === '5' :", 5 === "5");
+console.log("a > b :", a > b);
+console.log("a != b :", a != b);
+let age = 20, hasId = true;
+console.log("age >= 18 && hasId :", age >= 18 && hasId);
+console.log("age < 18 || hasId:", age < 18 || hasId);
+console.log("!hasId :", !hasId);
+let status = age >= 18 ? "Adult" : "Minor";
+console.log("Status:", status);

@@ -1,0 +1,21 @@
+// Task 3: spread, rest, copying, optional chaining and nullish coalescing
+const base = { theme: "light", size: 14 };
+const custom = { ...base, size: 18, font: "Arial" };
+console.log(custom);
+const arr1 = [1, 2], arr2 = [3, 4];
+console.log([...arr1, ...arr2, 5]);
+const original = { name: "Aman", scores: [80, 90] };
+const shallow = { ...original };
+shallow.scores.push(100);
+console.log("Shallow copy shares the array:", original.scores);
+const deep = structuredClone(original);
+deep.scores.push(70);
+console.log("Deep copy is separate:", original.scores, deep.scores);
+const profile = { name: "Neha", contact: { phone: null } };
+console.log("profile.contact?.email:", profile.contact?.email);
+console.log("profile.address?.city:", profile.address?.city);
+console.log("phone ?? 'N/A' :", profile.contact.phone ?? "N/A");
+console.log("0 || 'default' :", 0 || "default");
+console.log("0 ?? 'default' :", 0 ?? "default");
+const { name, ...rest } = { name: "Karan", age: 21, city: "Agra" };
+console.log(name, rest);

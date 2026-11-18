@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JavaScript Quiz</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+#quiz { width: 460px; border: 1px solid #444444; padding: 16px; border-radius: 8px; }
+.option { display: block; width: 100%; margin: 6px 0; padding: 8px; text-align: left; cursor: pointer; }
+.correct { background: #c8f0c8; }
+.wrong { background: #f5c6c6; }
+#info { color: #555555; font-size: 14px; }
+</style>
+</head>
+<body>
+<h2>JavaScript Quiz</h2>
+<div id="quiz">
+<div id="info"></div>
+<h3 id="question"></h3>
+<div id="options"></div>
+<button id="next" style="display:none">Next</button>
+</div>
+<script>
+const questions = [
+  { q: "Which keyword declares a constant?", options: ["var", "let", "const", "static"], answer: 2 },
+  { q: "What does typeof null return?", options: ["null", "object", "undefined", "number"], answer: 1 },
+  { q: "Which method adds an item to the end of an array?", options: ["push()", "pop()", "shift()", "map()"], answer: 0 },
+  { q: "What is the result of '5' + 2?", options: ["7", "52", "NaN", "Error"], answer: 1 },
+  { q: "Which method converts JSON text to an object?", options: ["JSON.stringify", "JSON.parse", "JSON.object", "JSON.decode"], answer: 1 }
+];
+let index = 0, score = 0, answered = false;
+const info = document.getElementById("info");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next");
+
+function showQuestion() {
+  const item = questions[index];
+  answered = false;
+  nextBtn.style.display = "none";
+  info.textContent = "Question " + (index + 1) + " of " + questions.length + " | Score: " + score;
+  questionEl.textContent = item.q;
+  optionsEl.innerHTML = "";
+  item.options.forEach(function (text, i) {
+    const b = document.createElement("button");
+    b.className = "option";
+    b.textContent = text;
+    b.addEventListener("click", function () { choose(i, b); });
+    optionsEl.appendChild(b);
+  });
+}
+
+function choose(i, button) {
+  if (answered) return;
+  answered = true;
+  const correct = questions[index].answer;
+  if (i === correct) { score++; button.classList.add("correct"); }
+  else {
+    button.classList.add("wrong");
+    optionsEl.children[correct].classList.add("correct");
+  }
+  nextBtn.style.display = "inline-block";
+  nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
+  nextBtn.addEventListener("click", function () {
+    index++;
+    if (index < questions.length) showQuestion(); else showResult();
+  });
+}
+
+function showResult() {
+  const best = Number(localStorage.getItem("bestScore") || 0);
+  if (score > best) localStorage.setItem("bestScore", score);
+  info.textContent = "Quiz finished";
+  questionEl.textContent = "You scored " + score + " out of " + questions.length;
+  optionsEl.innerHTML = "<p>Best score so far: " + localStorage.getItem("bestScore") + "</p>";
+  nextBtn.textContent = "Restart";
+  nextBtn.style.display = "inline-block";
+  nextBtn.onclick = function () { location.reload(); };
+}
+showQuestion();
+</script>
+</body>
+</html>

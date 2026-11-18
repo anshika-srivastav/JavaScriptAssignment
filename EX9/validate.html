@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Form Validation and Storage</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+form { width: 340px; }
+label { display: block; margin-top: 10px; }
+input { width: 100%; padding: 6px; box-sizing: border-box; }
+.error { color: crimson; font-size: 13px; min-height: 16px; }
+.ok { color: green; font-weight: bold; }
+button { margin: 12px 6px 0 0; padding: 6px 12px; }
+</style>
+</head>
+<body>
+<h2>Registration Form</h2>
+<form id="form" novalidate>
+<label for="name">Name</label>
+<input type="text" id="name"><div class="error" id="e-name"></div>
+<label for="email">E-mail</label>
+<input type="text" id="email"><div class="error" id="e-email"></div>
+<label for="pass">Password (min 6 characters, with a digit)</label>
+<input type="password" id="pass"><div class="error" id="e-pass"></div>
+<label for="confirm">Confirm Password</label>
+<input type="password" id="confirm"><div class="error" id="e-confirm"></div>
+<button type="submit">Register</button>
+<button type="button" id="clear">Clear Saved Users</button>
+</form>
+<p id="message"></p>
+<h3>Saved users (localStorage)</h3>
+<ul id="users"></ul>
+<script>
+const form = document.getElementById("form");
+function setError(id, text) {
+  document.getElementById("e-" + id).textContent = text;
+  return text === "";
+}
+function showUsers() {
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+  const ul = document.getElementById("users");
+  ul.innerHTML = "";
+  users.forEach(function (u) {
+    const li = document.createElement("li");
+    li.textContent = u.name + " - " + u.email;
+    ul.appendChild(li);
+  });
+  if (users.length === 0) ul.innerHTML = "<li>No users saved</li>";
+}
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const pass = document.getElementById("pass").value;
+  const confirm = document.getElementById("confirm").value;
+  const results = [
+    setError("name", name.length < 3 ? "Name must have at least 3 letters" : ""),
+    setError("email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "" : "Enter a valid e-mail address"),
+    setError("pass", pass.length >= 6 && /\d/.test(pass) ? "" : "Password needs 6+ characters and a digit"),
+    setError("confirm", pass === confirm ? "" : "Passwords do not match")
+  ];
+  const message = document.getElementById("message");
+  if (results.every(Boolean)) {
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    users.push({ name: name, email: email });
+    localStorage.setItem("users", JSON.stringify(users));
+    sessionStorage.setItem("lastUser", name);
+    message.className = "ok";
+    message.textContent = "Registered successfully: " + sessionStorage.getItem("lastUser");
+    form.reset();
+    showUsers();
+  } else {
+    message.className = "error";
+    message.textContent = "Please correct the errors above.";
+  }
+});
+document.getElementById("clear").addEventListener("click", function () {
+  localStorage.removeItem("users");
+  showUsers();
+});
+showUsers();
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DOM Manipulation</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+.box { border: 1px solid #444444; padding: 12px; width: 420px; }
+li { margin: 6px 0; cursor: pointer; }
+li.done { text-decoration: line-through; color: gray; }
+button { margin-left: 4px; }
+</style>
+</head>
+<body>
+<h1 id="title">Task List (DOM)</h1>
+<div class="box">
+<input type="text" id="task" placeholder="Enter a task">
+<button id="add">Add Task</button>
+<button id="color">Change Heading Colour</button>
+<ul id="list"></ul>
+<p id="count">Tasks: 0</p>
+</div>
+<script>
+const input = document.getElementById("task");
+const list = document.getElementById("list");
+const count = document.getElementById("count");
+const title = document.querySelector("#title");
+const colors = ["crimson", "teal", "darkorange", "navy"];
+let colorIndex = 0;
+function updateCount() {
+  count.textContent = "Tasks: " + list.children.length;
+}
+document.getElementById("add").addEventListener("click", function () {
+  const text = input.value.trim();
+  if (text === "") {
+    alert("Please enter a task");
+    return;
+  }
+  const li = document.createElement("li");
+  li.textContent = text + " ";
+  const del = document.createElement("button");
+  del.textContent = "Delete";
+  del.addEventListener("click", function (e) {
+    e.stopPropagation();
+    li.remove();
+    updateCount();
+  });
+  li.addEventListener("click", function () {
+    li.classList.toggle("done");
+  });
+  li.appendChild(del);
+  list.appendChild(li);
+  input.value = "";
+  updateCount();
+});
+document.getElementById("color").addEventListener("click", function () {
+  title.style.color = colors[colorIndex % colors.length];
+  colorIndex++;
+});
+</script>
+</body>
+</html>
